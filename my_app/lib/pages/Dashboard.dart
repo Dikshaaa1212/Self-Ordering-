@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:my_app/pages/CartPage.dart';
 import 'package:my_app/pages/MenuCatPage.dart';
+import 'package:my_app/pages/PopularItemPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -179,7 +180,7 @@ class Dashboard extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const OrderPage(),
+                                          builder: (context) =>  MenuPage(),
                                         ),
                                       );
                                     },
@@ -284,92 +285,98 @@ class Dashboard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: popularItems.length,
-                  itemBuilder: (context, index) {
-                    var item = popularItems[index];
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.grey[100],
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                bottomLeft: Radius.circular(16)),
-                            child: Image.asset(
-                              item["image"],
-                              width: 100,
-                              height: 120,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(item["title"],
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  const SizedBox(height: 6),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.star,
-                                          size: 14, color: Colors.orange),
-                                      const SizedBox(width: 4),
-                                      Text(item["rating"]),
-                                      const SizedBox(width: 10),
-                                      const Icon(Icons.access_time,
-                                          size: 14, color: Colors.grey),
-                                      const SizedBox(width: 4),
-                                      Text(item["time"]),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: const [
-                                          Icon(Icons.shopping_cart,
-                                              size: 16, color: Colors.orange),
-                                          SizedBox(width: 4),
-                                          Text("1"),
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: Colors.orange,
-                                        ),
-                                        child: Text(item["price"],
-                                            style: const TextStyle(
-                                                color: Colors.white)),
-                                      )
-                                    ],
-                                  ),
-                                        ],  
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+
+ListView.builder(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  itemCount: popularItems.length,
+  itemBuilder: (context, index) {
+    var item = popularItems[index];
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PopularItemDetailPage(item: item),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.grey[100],
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  bottomLeft: Radius.circular(16)),
+              child: Image.asset(
+                item["image"],
+                width: 100,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(item["title"],
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 14, color: Colors.orange),
+                        const SizedBox(width: 4),
+                        Text(item["rating"]),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.access_time,
+                            size: 14, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Text(item["time"]),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.shopping_cart,
+                                size: 16, color: Colors.orange),
+                            SizedBox(width: 4),
+                            Text("1"),
+                          ],
                         ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.orange,
+                          ),
+                          child: Text(item["price"],
+                              style: const TextStyle(color: Colors.white)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+),
+
             ],
           ),
         ),
@@ -378,23 +385,3 @@ class Dashboard extends StatelessWidget {
   }
 }
 
-/// Order Page
-class OrderPage extends StatelessWidget {
-  const OrderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Order Page"),
-        backgroundColor: Colors.orange,
-      ),
-      body: const Center(
-        child: Text(
-          "Order your food here!",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
